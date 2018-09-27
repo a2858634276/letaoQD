@@ -43,39 +43,5 @@
 </div>
 <script src="../res/mui/js/mui.min.js"></script>
 <script src="../../assets/jquery/jquery.min.js"></script>
-<script>
-    // 登录
-    /* $('.btn_login').on('click', function () {
-        // 发送请求至服务器 http://localhost:3000
-        $.ajax({
-            url: '/api/user/login',
-            type: 'post',
-            data: {
-                username: $('input[name="name"]').val(),
-                password: $('input[name="pass"]').val()
-            },
-            success: function (info) {
-                if(info.success) {
-                    location.href = './index.html'
-                }
-                console.log(info)
-            }
-        })
-    }); */
-
-    $('.btn-login').on('click', function() {
-        $.ajax({
-            url: '/api/user/login',
-            type: 'get',
-            data: {
-                username: '12345',
-                password: '123456'
-            },
-            success: function(info) {
-                console.log(info);
-            }
-        })
-    });
-</script>
 </body>
 </html>
