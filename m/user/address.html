@@ -14,49 +14,56 @@
     <link rel="stylesheet" href="../css/user.css"/>
 </head>
 <body>
-<div class="cz_layout bgg">
-    <header class="cz_topBar">
-        <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
-        <span class="title">收货地址管理</span>
-    </header>
-    <div class="cz_container">
-        <ul class="mui-table-view">
-            <li class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="addressManage.html" class="mui-navigate-right mui-slider-handle">
-                    <div class="delivery">邮编：<span>100000</span>&nbsp;收货人：<span>黄晓明</span></div>
-                    <div class="address">北京市海淀区西三旗街道经验龙办公楼传智播客教育科技有限公司</div>
-                </a>
-            </li>
-            <li class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="addressManage.html" class="mui-navigate-right mui-slider-handle">
-                    <div class="delivery">邮编：<span>100000</span>&nbsp;收货人：<span>黄晓明</span></div>
-                    <div class="address">北京市海淀区西三旗街道经验龙办公楼传智播客教育科技有限公司</div>
-                </a>
-            </li>
-            <li class="mui-table-view-cell">
-                <div class="mui-slider-right mui-disabled">
-                    <a class="mui-btn mui-btn-red">删除</a>
-                </div>
-                <a href="addressManage.html" class="mui-navigate-right mui-slider-handle">
-                    <div class="delivery">邮编：<span>100000</span>&nbsp;收货人：<span>黄晓明</span></div>
-                    <div class="address">北京市海淀区西三旗街道经验龙办公楼传智播客教育科技有限公司</div>
-                </a>
-            </li>
-        </ul>
+    <div class="cz_layout bgg">
+        <header class="cz_topBar">
+            <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
+            <span class="title">收货地址管理</span>
+        </header>
+        <div class="cz_container">
+            <ul class="mui-table-view">
+                
+            </ul>
+            <div style="padding: 0 10px">
+                <a href="./addressAdd.html" class="mui-btn mui-btn-primary btn_login">添加地址</a>
+            </div>
+        </div>
+        <footer class="cz_tabs">
+            <a class="tab_home fa fa-home" href="../index.html"><span>首页</span></a>
+            <a class="tab_cate fa fa-bars" href="../cate.html"><span>分类</span></a>
+            <a class="tab_cart fa fa-shopping-cart" href="../cart.html"><span>购物车</span></a>
+            <a class="tab_user fa fa-user" href="../user/index.html"><span>会员中心</span></a>
+        </footer>
     </div>
-    <footer class="cz_tabs">
-        <a class="tab_home fa fa-home" href="../index.html"><span>首页</span></a>
-        <a class="tab_cate fa fa-bars" href="../cate.html"><span>分类</span></a>
-        <a class="tab_cart fa fa-shopping-cart" href="../cart.html"><span>购物车</span></a>
-        <a class="tab_user fa fa-user" href="../user/index.html"><span>会员中心</span></a>
-    </footer>
-</div>
-<script src="../res/mui/js/mui.min.js"></script>
+    <!-- 收货地址管理模板 -->
+    <script type="text/template" id="address-tpl">
+        {{each list value}}
+            <li class="mui-table-view-cell">
+                <div class="mui-slider-right mui-disabled">
+                    <a class="mui-btn mui-btn-red">删除</a>
+                </div>
+                <a href="addressManage.html" class="mui-navigate-right mui-slider-handle">
+                    <div class="delivery">邮编：<span>{{value.postCode}}</span>&nbsp;收货人：<span>{{value.recipients}}</span></div>
+                    <div class="address">{{value.address}} {{value.addressDetail}}</div>
+                </a>
+            </li>
+        {{/each}}
+    </script>
+    <script src="../res/mui/js/mui.min.js"></script>
+    <script src="../../assets/jquery/jquery.min.js"></script>
+    <script src="../../assets/template/template-web.js"></script>
+    <script>
+        // 获取用户的地址列表
+        // 1、发送ajax请求即可
+        $.ajax({
+            url: '/api/address/queryAddress',
+            type: 'get',
+            success: function(info) {
+                console.log(info);
+                // 根据后端返回的数据渲染模板
+                var html = template('address-tpl', {list: info});
+                $('.mui-table-view').html(html);
+            }
+        });
+    </script>
 </body>
 </html>

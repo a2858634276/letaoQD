@@ -6,7 +6,7 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
-    <title>修改密码</title>
+    <title>收货地址管理</title>
     <link type="image/x-icon" rel="shortcut icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../res/mui/css/mui.min.css"/>
     <link rel="stylesheet" href="../res/fontAwesome/css/font-awesome.min.css"/>
@@ -14,31 +14,35 @@
     <link rel="stylesheet" href="../css/user.css"/>
 </head>
 <body>
-    <div class="cz_layout">
+    <div class="cz_layout bgg">
         <header class="cz_topBar">
             <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
-            <span class="title">修改密码</span>
+            <span class="title">收货地址管理</span>
         </header>
         <div class="cz_container">
             <form action="">
                 <div class="form_box">
-                    <div class="mui-input-row">
-                        <input name="oldPassword" type="password" placeholder="旧密码" class="mui-input-password">
-                        <span class="mui-icon mui-icon-eye"></span>
+                    <div class="region">
+                        <select name="p" id="p" data-id="">
+                            <option value="">请选择省份</option>
+                        </select>
+                        <select name="c" id="c" data-id="">
+                            <option value="">请选择城市</option>
+                        </select>
+                        <select name="d" id="d" data-id="">
+                            <option value="">请选择区/县</option>
+                        </select>
                     </div>
                     <div class="mui-input-row">
-                        <input name="newPassword" type="password" placeholder="新密码" class="mui-input-password">
-                        <span class="mui-icon mui-icon-eye"></span>
+                        <input name="recipients" type="text" placeholder="收货人">
                     </div>
                     <div class="mui-input-row">
-                        <input type="password" placeholder="确认密码" class="mui-input-password">
-                        <span class="mui-icon mui-icon-eye"></span>
+                        <input name="postcode" type="text" placeholder="邮编">
                     </div>
                     <div class="mui-input-row">
-                        <input name="vCode" type="text" placeholder="认证码">
-                        <a href="javascript:;" class="btn_getCode mui-btn mui-btn-primary" >获取认证码</a>
+                        <textarea name="addressDetail" id="textarea" rows="5" placeholder="详细地址"></textarea>
                     </div>
-                    <button class="mui-btn mui-btn-primary btn_login">确认修改</button>
+                    <button type="submit" href="index.html" class="mui-btn mui-btn-primary btn_login">确认</button>
                 </div>
             </form>
         </div>
@@ -51,36 +55,39 @@
     </div>
     <script src="../res/mui/js/mui.min.js"></script>
     <script src="../../assets/jquery/jquery.min.js"></script>
+    <script src="../../assets/jquery-region/jquery.region.js"></script>
     <script>
-        // 获取验证码
-        $('.btn_getCode').on('click', function() {
-            // 用户获取验证码
-            $.ajax({
-                url: '/api/user/vCodeForUpdatePassword',
-                type: 'get',
-                success: function(info) {
-                    console.log(info);
-                }
-            });
+        // 使用 jQuery.region 插件生成省市县信息
+        $('.region').region({
+            // 出入 region.json 的地址
+            url: '../../assets/jquery-region/region.json'
         });
-
-        // 修改密码
+        
+        // 3、等待响应结果
         $('form').on('submit', function() {
-            // 1、获取表单数据
+            // 1、获取用户填写的信息
             var data = $(this).serialize();
-            // 2、发送ajax请求
+            
+            // data 中不包括 省市县 信息(需要手动获取拼凑)
+            var p = $('#p option:selected').text();
+            var c = $('#c option:selected').text();
+            var d = $('#d option:selected').text();
+
+            data += '&address=' + p + c + d;
+
+            // 2、发送用户填写的信息
             $.ajax({
-                url: '/api/user/updatePassword',
+                url: '/api/address/addAddress',
                 type: 'post',
-                data:  data,
+                data: data,
                 success: function(info) {
                     console.log(info);
-                    if(info.success) location.href = './login.html';
+                    if(info.success) {
+                        location.href = './address.html';
+                    }
                 }
             });
-            // 3、等待返回数据
-            // 4、根据数据做出相应操作
-            // 阻止表单默认事件
+            // 阻止默认提交事件
             return false;
         });
     </script>
